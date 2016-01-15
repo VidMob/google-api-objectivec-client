@@ -1255,14 +1255,14 @@ totalBytesExpectedToSend:(NSInteger)totalBytesExpected {
         [fetcher setProperty:parsedObject forKey:kFetcherParsedObjectKey];
       } else if (!isREST) {
         NSMutableDictionary *errorJSON = [jsonWrapper valueForKey:@"error"];
-        GTL_DEBUG_ASSERT(errorJSON != nil, @"no result or error in response:\n%@",
-                         jsonWrapper);
-        GTLErrorObject *errorObject = [GTLErrorObject objectWithJSON:errorJSON];
-        NSError *error = [errorObject foundationError];
+        if (errorJSON) {
+          GTLErrorObject *errorObject = [GTLErrorObject objectWithJSON:errorJSON];
+          NSError *error = [errorObject foundationError];
 
-        // Store the error and let it go to the callback
-        [fetcher setProperty:error
-                      forKey:kFetcherFetchErrorKey];
+          // Store the error and let it go to the callback
+          [fetcher setProperty:error
+                        forKey:kFetcherFetchErrorKey];
+        }
       }
     }
 
